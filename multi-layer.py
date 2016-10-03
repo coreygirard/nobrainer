@@ -1,5 +1,4 @@
 from numpy import exp, array, random, dot
-from pprint import pprint
 
 class NeuronLayer():
     def __init__(self, number_of_neurons, number_of_inputs):
@@ -30,23 +29,6 @@ class NeuralNetwork():
     def train(self, iterations):
         for n in range(iterations):
             thoughts = self.study(self.training_inputs)
-
-            '''
-            layer_delta = {}
-            layer_adjustment = {}
-            layer_error = {}
-            layer_error[len(thoughts)-1] = self.training_outputs - thoughts[-1]
-
-            for t in reversed(range(len(thoughts))):
-                layer_delta[t] = layer_error[t] * self.__sigmoid_derivative(thoughts[t])
-                layer_adjustment[t] = thoughts[t-1].T.dot(layer_delta[t])
-                layer_error[t] = layer_delta[t].dot(self.layer[t-1].synaptic_weights.T)
-
-            layer_delta[0] = layer_error[0] * self.__sigmoid_derivative(thoughts[0])
-            layer_adjustment[0] = self.training_inputs.T.dot(layer_delta[0])
-            '''
-
-
 
             layer_delta = {}
             layer_adjustment = {}
