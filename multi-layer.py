@@ -1,4 +1,5 @@
 from numpy import exp, array, random, dot
+from pprint import pprint
 
 class NeuronLayer():
     def __init__(self, number_of_neurons, number_of_inputs):
@@ -26,23 +27,39 @@ class NeuralNetwork():
         self.training_inputs = array([e[0] for e in data])
         self.training_outputs = array([[e[1] for e in data]]).T
 
-    def train(self, data, iterations):
+    def train(self, iterations):
         for n in range(iterations):
-            thoughts = self.think(training_set_inputs,showHidden=True)
+            thoughts = self.study(self.training_inputs)
+
+            '''
+            layer_delta = {}
+            layer_adjustment = {}
+            layer_error = {}
+            layer_error[len(thoughts)-1] = self.training_outputs - thoughts[-1]
+
+            for t in reversed(range(len(thoughts))):
+                layer_delta[t] = layer_error[t] * self.__sigmoid_derivative(thoughts[t])
+                layer_adjustment[t] = thoughts[t-1].T.dot(layer_delta[t])
+                layer_error[t] = layer_delta[t].dot(self.layer[t-1].synaptic_weights.T)
+
+            layer_delta[0] = layer_error[0] * self.__sigmoid_derivative(thoughts[0])
+            layer_adjustment[0] = self.training_inputs.T.dot(layer_delta[0])
+            '''
+
+
 
             layer_delta = {}
             layer_adjustment = {}
             layer_error = {}
-            layer_error[len(thoughts)-1] = training_set_outputs - thoughts[-1]
 
-            for t in reversed(range(1,len(thoughts))):
+            layer_error[len(thoughts)-1] = self.training_outputs - thoughts[1]
+            for t in reversed(range(len(thoughts))):
                 layer_delta[t] = layer_error[t] * self.__sigmoid_derivative(thoughts[t])
                 layer_adjustment[t] = thoughts[t-1].T.dot(layer_delta[t])
 
                 layer_error[t-1] = layer_delta[t].dot(self.layer[t].synaptic_weights.T)
-
             layer_delta[0] = layer_error[0] * self.__sigmoid_derivative(thoughts[0])
-            layer_adjustment[0] = training_set_inputs.T.dot(layer_delta[0])
+            layer_adjustment[0] = self.training_inputs.T.dot(layer_delta[0])
 
             for k in layer_adjustment.keys():
                 self.layer[k].synaptic_weights += layer_adjustment[k]
@@ -50,8 +67,8 @@ class NeuralNetwork():
     def study(self, inputs):
         thoughts = [array(inputs)]
         for e in self.layer:
-            thoughts.append(self.__sigmoid(dot(iterative, e.synaptic_weights)))
-        return thoughts
+            thoughts.append(self.__sigmoid(dot(thoughts[-1], e.synaptic_weights)))
+        return thoughts[1:]
 
     def think(self, inputs):
         iterative = array(inputs)
@@ -61,15 +78,15 @@ class NeuralNetwork():
 
 
 if __name__ == "__main__":
-    data = [[[0, 0, 1],0]
-            [[0, 1, 1],1]
-            [[1, 0, 1],1]
-            [[0, 1, 0],1]
-            [[1, 0, 0],1]
-            [[1, 1, 1],0]
-            [[0, 0, 0],0]])
+    data = [[[0, 0, 1],0],
+            [[0, 1, 1],1],
+            [[1, 0, 1],1],
+            [[0, 1, 0],1],
+            [[1, 0, 0],1],
+            [[1, 1, 1],0],
+            [[0, 0, 0],0]]
 
     nn = NeuralNetwork(data,2,4)
-    nn.train(100)
+    nn.train(60000)
 
     print(nn.think([1, 1, 0]))
