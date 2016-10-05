@@ -1,12 +1,13 @@
 from numpy import exp, array, random, dot
 
 class NeuronLayer():
-    def __init__(self, number_of_neurons, number_of_inputs):
-        self.synaptic_weights = 2 * random.random((number_of_inputs, number_of_neurons)) - 1
+    def __init__(self, n_neurons, n_inputs):
+        self.synaptic_weights = 2 * random.random((n_inputs, n_neurons)) - 1
 
 class ShallowNetwork():
-    def __init__(self,data):
-        random.seed(1)
+    def __init__(self,data,seed=None):
+        if seed != None:
+            random.seed(seed)
         self.setTrainingData(data)
         self.layer = NeuronLayer(1,len(self.training_inputs[0]))
 
@@ -34,8 +35,9 @@ class ShallowNetwork():
         return self.__sigmoid(dot(array(inputs), self.layer.synaptic_weights))
 
 class DeepNetwork():
-    def __init__(self,data,depth,neurons):
-        random.seed(1)
+    def __init__(self,data,depth,neurons,seed=None):
+        if seed != None:
+            random.seed(seed)
         self.setTrainingData(data)
         self.layer = []
 
@@ -88,18 +90,3 @@ class DeepNetwork():
         for e in self.layer:
             iterative = self.__sigmoid(dot(iterative, e.synaptic_weights))
         return iterative
-
-
-if __name__ == "__main__":
-    data = [[[0, 0, 1],0],
-            [[0, 1, 1],1],
-            [[1, 0, 1],1],
-            [[0, 1, 0],1],
-            [[1, 0, 0],1],
-            [[1, 1, 1],0],
-            [[0, 0, 0],0]]
-
-    nn = DeepNetwork(data,2,4)
-    nn.train(60000)
-
-    print(nn.think([1, 1, 0]))
