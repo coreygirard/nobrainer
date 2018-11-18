@@ -1,6 +1,7 @@
 # nobrainer
 
-
+[![Build Status](https://travis-ci.org/coreygirard/nobrainer.svg?branch=master)](https://travis-ci.org/coreygirard/nobrainer) <br>
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 ```python
 data = [[[0, 0, 1],0],
